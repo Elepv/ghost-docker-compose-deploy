@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  ghost-mysql:
+    image: mysql:5.7  # Recommended MySQL version for compatibility
+    container_name: ghost-mysql
+    volumes:
+      - $HOME/blog/db/ghost_data_mysql:/var/lib/mysql:z 
+    expose:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${ENV_MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: ghost
+      MYSQL_USER: ghost
+      MYSQL_PASSWORD: "${ENV_MYSQL_PASSWORD}"
+    restart: always 
+    networks:
+      - ghost-network
+
+  ghost:
+    container_name: ghost
+    image: ghost:5.79.4  # Use the latest Ghost image
+    ports:
+      - "2368:2368"
+    volumes:
+      - $HOME/blog/ghost/content:/var/lib/ghost/content:z # 持久化内容
+      - $HOME/blog/ghost/config.production.json:/var/lib/ghost/config.production.json:z # Overwrite default settings
+    environment:
+      NODE_ENV: production # set production or development
+      url: https://${ENV_DOMAIN_NAME}  # Local test: http://localhost:2386
+      TZ: Asia/Shanghai  # 设置环境变量
+    expose:
+      - "3306"
+    restart: always # 设置 Ghost 服务的重启策略为 always
+    depends_on:
+      - ghost-mysql
+    networks:
+      - ghost-network
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - $HOME/blog/nginx/conf.d/:/etc/nginx/conf.d/
+      - $HOME/certs/ENV_DOMAIN_NAME.key:/etc/nginx/${ENV_DOMAIN_NAME}.key:ro
+      - $HOME/certs/fullchain.cer:/etc/nginx/fullchain.cer:ro
+    restart: always 
+    depends_on:
+      - ghost
+    networks:
+      - ghost-network
+
+networks:
+  ghost-network:
+    name: ghost-network
+    driver: bridge
+    

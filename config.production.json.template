@@ -1,0 +1,41 @@
+{
+    "url": "https://gtoxai.com",
+    "server": {
+        "port": 2368,
+        "host": "0.0.0.0"
+    },
+    "database": {
+        "client": "mysql",
+        "connection": {
+            "host": "ghost-mysql",
+            "port": 3306,
+            "user": "ghost",
+            "password": "ENV_MYSQL_PASSWORD",
+            "database": "ghost"
+        }
+    },
+    "mail": {
+        "from": "'Custom Name' <mail@gtoxai.com>", 
+        "transport": "SMTP",
+        "logger": true,
+        "options": {
+	        "service": "Gmail",
+            "host": "smtp.gmail.com",
+            "secureConnection": true,
+            "auth": {
+                "user": "ENV_GMAIL_ACCOUNT",
+                "pass": "ENV_GMAIL_APP_PASSWORD"
+            }
+        }
+    },
+    "logging": {
+        "transports": [
+            "file",
+            "stdout"
+        ]
+    },
+    "process": "systemd",
+    "paths": {
+        "contentPath": "/var/lib/ghost/content"
+    }
+}

@@ -1,0 +1,11 @@
+ 忽略特定的配置文件和脚本
+./blog/nginx/conf.d/default.conf
+./blog/scripts/apply_cert.sh
+./blog/ghost/config.production.json
+
+# 忽略证书相关的目录和文件
+./certs/
+./.acme.sh/
+
+# 忽略环境变量文件
+.env
