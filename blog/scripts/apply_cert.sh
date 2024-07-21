@@ -44,9 +44,9 @@ curl https://get.acme.sh | sh
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 
 # 申请证书
-~/.acme.sh/acme.sh --issue -d ${DOMAIN_NAME} --standalone -k ec-256 --force --insecure
+~/.acme.sh/acme.sh --issue -d efixai.com --standalone -k ec-256 --force --insecure
 
 # 安装证书
-~/.acme.sh/acme.sh --install-cert -d ${DOMAIN_NAME} \
-    --key-file ~/certs/${DOMAIN_NAME}.key \
+~/.acme.sh/acme.sh --install-cert -d efixai.com \
+    --key-file ~/certs/efixai.com.key \
     --fullchain-file ~/certs/fullchain.cer

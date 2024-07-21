@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ghost-mysql:
     image: mysql:5.7  # Recommended MySQL version for compatibility
@@ -45,8 +43,8 @@ services:
       - "443:443"
     volumes:
       - ${PROJECT_ROOT_FOLDER}/${PROJECT_NAME}/blog/nginx/conf.d/:/etc/nginx/conf.d/
-      - ${PROJECT_ROOT_FOLDER}/${PROJECT_NAME}/ghost-docker-compose-deploy/certs/${DOMAIN_NAME}.key:/etc/nginx/${DOMAIN_NAME}.key:ro
-      - ${PROJECT_ROOT_FOLDER}/${PROJECT_NAME}/certs/fullchain.cer:/etc/nginx/fullchain.cer:ro
+      - ${PROJECT_ROOT_FOLDER}/certs/${DOMAIN_NAME}.key:/etc/nginx/${DOMAIN_NAME}.key:ro
+      - ${PROJECT_ROOT_FOLDER}/certs/fullchain.cer:/etc/nginx/fullchain.cer:ro
     restart: always 
     depends_on:
       - ghost

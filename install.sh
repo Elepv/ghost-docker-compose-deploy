@@ -38,14 +38,18 @@ fi
 configure_files() {
     echo "正在配置文件..."
     # 使用envsubst替换模板文件中的变量
-    envsubst < ./default.conf.template > ./blog/nginx/conf.d/default.conf
-    envsubst < ./apply_cert.sh.template > ./blog/scripts/apply_cert.sh
-    envsubst < ./config.production.json.template > ./blog/ghost/config.production.json
+    envsubst '${DOMAIN_NAME}' < ./default.conf.template > ./blog/nginx/conf.d/default.conf
+    envsubst '${DOMAIN_NAME}' < ./apply_cert.sh.template > ./blog/scripts/apply_cert.sh
+    envsubst '${MYSQL_PASSWORD}, ${GMAIL_ACCOUNT}, ${GMAIL_APP_PASSWORD}' < ./config.production.json.template > ./blog/ghost/config.production.json
+
 
     echo
     echo "先进入项目目录"
-    echo "运行  `sudo ./blog/scripts/apply_cert.sh`  获取证书文件"
+    echo "运行  'chmod +x ./blog/scripts/apply_cert.sh' 赋予脚本执行权限"
+    echo "运行  'sudo ./blog/scripts/apply_cert.sh'  执行脚本，获取证书文件"
     echo
+    echo "----------------------------------------"
+    echo "若还未生成证书，先执行上面的命令申请证书"
     echo "运行 'docker-compose up -d' 来启动服务。"
     echo
 }
@@ -57,7 +61,7 @@ get_user_input() {
     echo "----------------------"
     echo "域名、VPS的IP。"
     echo "Gmail账户 和 Gmail 的 App 密码（需要先去Gmail 上获取，不会自行搜索关键字）"
-    echo "项目名和项目根目录[可选，有默认值]"
+    echo "项目名和项目根目录 [默认项目名称为: github 上的项目名称；默认用户根目录为： $HOME 目录。]"
     echo
     read -p "您已准备好这些信息了吗？[y/n]" ready
     if [[ $ready != "y" ]]; then
@@ -136,6 +140,13 @@ if [ -f ".env" ]; then
         get_user_input
     else
         echo "继续使用旧的配置文件。"
+        source .env
+        
+        export DOMAIN_NAME=$DOMAIN_NAME
+        export MYSQL_PASSWORD=$MYSQL_PASSWORD
+        export GMAIL_ACCOUNT=$GMAIL_ACCOUNT
+        export GMAIL_APP_PASSWORD=$GMAIL_APP_PASSWORD
+
         configure_files
     fi
 else
