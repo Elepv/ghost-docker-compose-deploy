@@ -10,12 +10,12 @@
             "host": "ghost-mysql",
             "port": 3306,
             "user": "ghost",
-            "password": "ENV_MYSQL_PASSWORD",
+            "password": "${MYSQL_PASSWORD}",
             "database": "ghost"
         }
     },
     "mail": {
-        "from": "'Custom Name' <mail@gtoxai.com>", 
+        "from": "'Custom Name' <${GMAIL_ACCOUNT}>", 
         "transport": "SMTP",
         "logger": true,
         "options": {
@@ -23,8 +23,8 @@
             "host": "smtp.gmail.com",
             "secureConnection": true,
             "auth": {
-                "user": "ENV_GMAIL_ACCOUNT",
-                "pass": "ENV_GMAIL_APP_PASSWORD"
+                "user": "${GMAIL_ACCOUNT}",
+                "pass": "${GMAIL_APP_PASSWORD}"
             }
         }
     },

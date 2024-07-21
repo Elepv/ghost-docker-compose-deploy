@@ -88,10 +88,14 @@ get_user_input() {
     read -p "以上信息是否正确？(y/n): " confirm
 
     if [[ $confirm == "y" ]]; then
-        # 备份.env文件
-        cp .env ".env.backup_$(date +%Y%m%d%H%M%S)"
-        # 导出变量供envsubst使用
-        export DOMAIN_NAME=$domain VPS_IP=$ip MYSQL_ROOT_PASSWORD=$mysql_root MYSQL_PASSWORD=$mysql_user GMAIL_ACCOUNT=$gmail_acc GMAIL_APP_PASSWORD=$gmail_pass
+
+        # 导出变量供 envsubst 使用
+        export DOMAIN_NAME=$domain
+        export VPS_IP=$ip
+        export MYSQL_ROOT_PASSWORD=$mysql_root
+        export MYSQL_PASSWORD=$mysql_user
+        export GMAIL_ACCOUNT=$gmail_acc
+        export GMAIL_APP_PASSWORD=$gmail_pass
         envsubst < .env.template > .env
         configure_files
 
@@ -109,11 +113,14 @@ if [ -f ".env" ]; then
     echo "是否需要重新生成 .env 文件？[y/n]"
     read regenerate
     if [[ $regenerate == "y" ]]; then
+        # 备份.env文件
+        cp .env ".env.backup_$(date +%Y%m%d%H%M%S)"
+        echo "以备份旧的 .env 文件"
+        echo
         # 调用函数获取用户输入
         get_user_input
     else
         echo "继续使用旧的配置文件。"
-        source .env
         configure_files
     fi
 else

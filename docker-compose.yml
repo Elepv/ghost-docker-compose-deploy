@@ -9,10 +9,10 @@ services:
     expose:
       - "3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "${ENV_MYSQL_ROOT_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_DATABASE: ghost
       MYSQL_USER: ghost
-      MYSQL_PASSWORD: "${ENV_MYSQL_PASSWORD}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
     restart: always 
     networks:
       - ghost-network
@@ -27,7 +27,7 @@ services:
       - $HOME/blog/ghost/config.production.json:/var/lib/ghost/config.production.json:z # Overwrite default settings
     environment:
       NODE_ENV: production # set production or development
-      url: https://${ENV_DOMAIN_NAME}  # Local test: http://localhost:2386
+      url: https://${DOMAIN_NAME}  # Local test: http://localhost:2386
       TZ: Asia/Shanghai  # 设置环境变量
     expose:
       - "3306"
@@ -45,7 +45,7 @@ services:
       - "443:443"
     volumes:
       - $HOME/blog/nginx/conf.d/:/etc/nginx/conf.d/
-      - $HOME/certs/ENV_DOMAIN_NAME.key:/etc/nginx/${ENV_DOMAIN_NAME}.key:ro
+      - $HOME/certs/${DOMAIN_NAME}.key:/etc/nginx/${DOMAIN_NAME}.key:ro
       - $HOME/certs/fullchain.cer:/etc/nginx/fullchain.cer:ro
     restart: always 
     depends_on:
