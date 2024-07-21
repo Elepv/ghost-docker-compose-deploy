@@ -37,14 +37,10 @@ fi
 # 定义函数处理模板文件
 configure_files() {
     echo "正在配置文件..."
-    cp default.conf.template ./blog/nginx/conf.d/default.conf
-    cp apply_cert.sh.template ./blog/scripts/apply_cert.sh
-    cp config.production.json.template ./blog/ghost/config.production.json
-
     # 使用envsubst替换模板文件中的变量
-    envsubst < ./blog/nginx/conf.d/default.conf.template > ./blog/nginx/conf.d/default.conf
-    envsubst < ./blog/scripts/apply_cert.sh.template > ./blog/scripts/apply_cert.sh
-    envsubst < ./blog/ghost/config.production.json.template > ./blog/ghost/config.production.json
+    envsubst < ./default.conf.template > ./blog/nginx/conf.d/default.conf
+    envsubst < ./apply_cert.sh.template > ./blog/scripts/apply_cert.sh
+    envsubst < ./config.production.json.template > ./blog/ghost/config.production.json
 
     echo
     echo "运行 'docker-compose up -d' 来启动服务。"
@@ -56,9 +52,9 @@ get_user_input() {
 
     echo "您是否准备好以下资料？"
     echo "----------------------"
-    echo "域名、VPS的IP;"
-    echo "MySQL密码"
-    echo "Gmail账户 和 Gamil 的 App 密码;[y/n]"
+    echo "域名、VPS的IP。"
+    echo "MySQL密码,MySQL Root密码。可自己输入，建议随机生成复制密码。"
+    echo "Gmail账户 和 Gamil 的 App 密码（需要先去Gmail 上获取，不会自行搜索关键字）[y/n]"
     read ready
     if [[ $ready != "y" ]]; then
         echo
