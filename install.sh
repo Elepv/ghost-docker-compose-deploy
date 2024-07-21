@@ -43,6 +43,9 @@ configure_files() {
     envsubst < ./config.production.json.template > ./blog/ghost/config.production.json
 
     echo
+    echo "先进入项目目录"
+    echo "运行  `sudo ./blog/scripts/apply_cert.sh`  获取证书文件"
+    echo
     echo "运行 'docker-compose up -d' 来启动服务。"
     echo
 }
@@ -53,9 +56,10 @@ get_user_input() {
     echo "您是否准备好以下资料？"
     echo "----------------------"
     echo "域名、VPS的IP。"
-    echo "MySQL密码,MySQL Root密码。可自己输入，建议随机生成复制密码。"
-    echo "Gmail账户 和 Gamil 的 App 密码（需要先去Gmail 上获取，不会自行搜索关键字）[y/n]"
-    read ready
+    echo "Gmail账户 和 Gmail 的 App 密码（需要先去Gmail 上获取，不会自行搜索关键字）"
+    echo "项目名和项目根目录[可选，有默认值]"
+    echo
+    read -p "您已准备好这些信息了吗？[y/n]" ready
     if [[ $ready != "y" ]]; then
         echo
         echo "请准备好所有信息后再运行此脚本。"
@@ -73,6 +77,12 @@ get_user_input() {
     read -p "请输入MySQL的用户密码: " mysql_user
     read -p "请输入Gmail账户: " gmail_acc
     read -p "请输入Gmail的App密码: " gmail_pass
+    read -p "请输入项目名（默认为当前目录名）: " project_name
+    read -p "请输入项目根目录（默认为当前用户的家目录）: " project_root_folder
+
+    # 设置默认值
+    project_name=${project_name:-$(basename "$(pwd)")}
+    project_root_folder=${project_root_folder:-$HOME}
 
     echo
     echo
@@ -84,6 +94,8 @@ get_user_input() {
     echo "MySQL的用户密码: $mysql_user"
     echo "Gmail账户: $gmail_acc"
     echo "Gmail的App密码: $gmail_pass"
+    echo "项目名: $project_name"
+    echo "项目根目录: $project_root_folder"
     echo
     read -p "以上信息是否正确？(y/n): " confirm
 
@@ -96,6 +108,9 @@ get_user_input() {
         export MYSQL_PASSWORD=$mysql_user
         export GMAIL_ACCOUNT=$gmail_acc
         export GMAIL_APP_PASSWORD=$gmail_pass
+        export PROJECT_NAME=$project_name
+        export PROJECT_ROOT_FOLDER=$project_root_folder
+
         envsubst < .env.template > .env
         configure_files
 

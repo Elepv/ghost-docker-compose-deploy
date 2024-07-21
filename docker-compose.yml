@@ -5,7 +5,7 @@ services:
     image: mysql:5.7  # Recommended MySQL version for compatibility
     container_name: ghost-mysql
     volumes:
-      - $HOME/blog/db/ghost_data_mysql:/var/lib/mysql:z 
+      - ${PROJECT_ROOT_FOLDER}/${PROJECT_NAME}/blog/db/ghost_data_mysql:/var/lib/mysql:z 
     expose:
       - "3306"
     environment:
@@ -23,8 +23,8 @@ services:
     ports:
       - "2368:2368"
     volumes:
-      - $HOME/blog/ghost/content:/var/lib/ghost/content:z # 持久化内容
-      - $HOME/blog/ghost/config.production.json:/var/lib/ghost/config.production.json:z # Overwrite default settings
+      - ${PROJECT_ROOT_FOLDER}/${PROJECT_NAME}/blog/ghost/content:/var/lib/ghost/content:z # 持久化内容
+      - ${PROJECT_ROOT_FOLDER}/${PROJECT_NAME}/blog/ghost/config.production.json:/var/lib/ghost/config.production.json:z # Overwrite default settings
     environment:
       NODE_ENV: production # set production or development
       url: https://${DOMAIN_NAME}  # Local test: http://localhost:2386
@@ -44,9 +44,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - $HOME/blog/nginx/conf.d/:/etc/nginx/conf.d/
-      - $HOME/certs/${DOMAIN_NAME}.key:/etc/nginx/${DOMAIN_NAME}.key:ro
-      - $HOME/certs/fullchain.cer:/etc/nginx/fullchain.cer:ro
+      - ${PROJECT_ROOT_FOLDER}/${PROJECT_NAME}/blog/nginx/conf.d/:/etc/nginx/conf.d/
+      - ${PROJECT_ROOT_FOLDER}/${PROJECT_NAME}/ghost-docker-compose-deploy/certs/${DOMAIN_NAME}.key:/etc/nginx/${DOMAIN_NAME}.key:ro
+      - ${PROJECT_ROOT_FOLDER}/${PROJECT_NAME}/certs/fullchain.cer:/etc/nginx/fullchain.cer:ro
     restart: always 
     depends_on:
       - ghost
